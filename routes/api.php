@@ -14,6 +14,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('columns', 'ColumnController@index');
+Route::group(['prefix' => 'columns'], function () {
+    Route::post('add', 'ColumnController@add');
+    Route::get('edit/{id}', 'ColumnController@edit');
+    Route::post('update/{id}', 'ColumnController@update');
+    Route::delete('delete/{id}', 'ColumnController@delete');
+});
+
+Route::get('cards', 'CardController@index');
+Route::group(['prefix' => 'cards'], function () {
+    Route::post('add', 'CardController@add');
+    Route::get('edit/{id}', 'CardController@edit');
+    Route::post('update/{id}', 'CardController@update');
+    Route::delete('delete/{id}', 'CardController@delete');
 });
