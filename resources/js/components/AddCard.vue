@@ -4,7 +4,7 @@
 
 <script>
 export default {
-name: "AddCard"
+    name: "AddCard"
 }
 </script>
 

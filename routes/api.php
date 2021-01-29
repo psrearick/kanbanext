@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CardController;
+use App\Http\Controllers\ColumnController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,18 +20,18 @@ Route::middleware('auth:api')->get('user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('columns', 'ColumnController@index');
-Route::group(['prefix' => 'columns'], function () {
-    Route::post('add', 'ColumnController@add');
-    Route::get('edit/{id}', 'ColumnController@edit');
-    Route::post('update/{id}', 'ColumnController@update');
-    Route::delete('delete/{id}', 'ColumnController@delete');
+Route::get('columns', [ColumnController::class, 'index']);
+Route::group(['prefix' => 'column'], function () {
+    Route::post('add', [ColumnController::class, 'add']);
+    Route::get('edit/{id}', [ColumnController::class, 'edit']);
+    Route::post('update/{id}', [ColumnController::class, 'update']);
+    Route::delete('delete/{id}', [ColumnController::class, 'delete']);
 });
 
-Route::get('cards', 'CardController@index');
-Route::group(['prefix' => 'cards'], function () {
-    Route::post('add', 'CardController@add');
-    Route::get('edit/{id}', 'CardController@edit');
-    Route::post('update/{id}', 'CardController@update');
-    Route::delete('delete/{id}', 'CardController@delete');
+Route::get('cards', [CardController::class, 'index']);
+Route::group(['prefix' => 'card'], function () {
+    Route::post('add', [CardController::class, 'add']);
+    Route::get('edit/{id}', [CardController::class, 'edit']);
+    Route::post('update/{id}', [CardController::class, 'update']);
+    Route::delete('delete/{id}', [CardController::class, 'delete']);
 });
