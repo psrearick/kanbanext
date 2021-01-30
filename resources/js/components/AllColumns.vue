@@ -37,7 +37,7 @@
             <br>
             <a @click="exportDatabase">Export Database</a>
             <br>
-            <h3>DELETE BOARD</h3>
+            <a @click="deleteBoard">Delete Board</a>
         </aside>
     </div>
 </template>
@@ -87,6 +87,7 @@ export default {
             await this.axios.delete(`/api/column/delete/${id}`);
             let i = this.columns.map(item => item.id).indexOf(id);
             this.columns.splice(i, 1);
+            return true;
         },
         cardsInColumn(column_id) {
             return this.cards.filter(card => {
@@ -211,6 +212,15 @@ export default {
             link.setAttribute('download', 'db-dump.sql');
             document.body.appendChild(link);
             link.click();
+        },
+        async deleteBoard() {
+            let promises = this.columns.map(column => {
+                return this.deleteColumn(column.id);
+            });
+            await Promise.all(promises);
+            await this.fetchColumns();
+            await this.fetchCards();
+            return true;
         }
     }
 }
