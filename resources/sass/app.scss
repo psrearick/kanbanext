@@ -33,7 +33,7 @@ html, body, .container {
     &--gutters {
         margin: 0 0 0 -1em;
 
-        #{ $self }__cell {
+        >#{ $self }__cell {
             margin: 0 0 0 1em;
         }
     }

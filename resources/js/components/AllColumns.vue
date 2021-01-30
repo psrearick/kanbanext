@@ -1,7 +1,7 @@
 <template>
     <div class="grid grid--full">
         <main class="grid__cell">
-            <div class="columns__wrapper grid grid--gutters">
+            <div class="columns__wrapper grid grid--gutters grid--full">
                 <div v-for="column in columns" :key="column.id" class="column grid__cell grid__cell--25">
                     <div>
                         <strong>{{ column.name }}</strong>
@@ -11,19 +11,13 @@
                         </router-link>
                         <button @click="deleteColumn(column.id)">Delete</button>
                     </div>
-                    <div class="grid grid--column column__cards">
-                        <div v-for="card in cardInColumn(column.id)" :key="card.id" class="grid__cell">
-                            <div>
-                                <strong>{{card.title}}</strong>
-                            </div>
-                            <div>
-                                <p>{{card.description}}</p>
-                            </div>
-                            <div>
-                                <span>Edit</span>
-                                <a @click="deleteCard(card.id)">Delete</a>
-                            </div>
-                        </div>
+                    <div class="grid grid--column column__cards" v-if="cardInColumn(column.id).length">
+                        <Card v-for="(card, index) in cardInColumn(column.id)"
+                              :key="card.id"
+                              :card="card"
+                              :index="index"
+                              v-on:delete="removeCard(card.id)">
+                        </Card>
                     </div>
                     <div>
                         <router-link :to="'/card/add/' + column.id">Add Card</router-link>
@@ -32,14 +26,16 @@
             </div>
         </main>
         <aside class="grid__cell grid__cell--25">
-            <p>Sidebar</p>
+            <router-link to="/column/add">Add Column</router-link>
         </aside>
     </div>
 </template>
 
 <script>
+import Card from "./Card";
 export default {
     name: "AllColumns",
+    components: {Card},
     data() {
         return {
             columns: [],
@@ -60,15 +56,14 @@ export default {
             let i = this.columns.map(item => item.id).indexOf(id);
             this.columns.splice(i, 1);
         },
-        async deleteCard(id) {
-            await this.axios.delete(`/api/card/delete/${id}`);
-            let i = this.cards.map(item => item.id).indexOf(id);
-            this.cards.splice(i, 1);
-        },
         cardInColumn(column_id) {
             return this.cards.filter(card => {
                 return card.column_id === column_id;
             });
+        },
+        removeCard(id) {
+            let i = this.cards.map(item => item.id).indexOf(id);
+            this.cards.splice(i, 1);
         }
     }
 }

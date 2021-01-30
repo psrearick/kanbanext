@@ -27,7 +27,6 @@ export default {
         this.axios
             .get(`/api/column/edit/${this.$route.params.id}`)
             .then((response) => {
-                console.log(response);
                 this.column = response.data;
             });
     },
