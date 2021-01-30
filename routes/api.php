@@ -16,10 +16,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('user', function (Request $request) {
-    return $request->user();
-});
-
 Route::get('columns', [ColumnController::class, 'index']);
 Route::get('download', [ColumnController::class, 'downloadDatabase']);
 Route::group(['prefix' => 'column'], function () {

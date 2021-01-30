@@ -11,14 +11,13 @@ class Card extends Model
     /**
      * @var string[]
      */
-    protected $fillable = ['title', 'description', 'column_id', 'user_id', 'active', 'rank'];
+    protected $fillable = ['title', 'description', 'column_id', 'active', 'rank'];
 
     /**
      * @var string[]
      */
     protected $casts = [
         'column_id' => 'integer',
-        'user_id' => 'integer',
         'active' => 'boolean',
         'rank' => 'float'
     ];

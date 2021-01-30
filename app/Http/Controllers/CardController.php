@@ -42,7 +42,6 @@ class CardController extends Controller
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'column_id' => $columnId,
-            'user_id' => 1, // TODO: CHANGE THIS TO LOGGED IN USER
             'rank' => $rank
         ]);
         $card->save();
