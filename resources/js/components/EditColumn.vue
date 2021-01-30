@@ -1,18 +1,18 @@
 <template>
-    <div>
-        <h3>Edit Column</h3>
-        <div class="row">
-            <div>
-                <form @submit.prevent="updateColumn">
-                    <div>
-                        <label for="name">Name</label>
-                        <input id="name" type="text" v-model="column.name">
-                    </div>
-                    <button type="submit">Update Column</button>
-                    <a @click="$emit('close')">Cancel</a>
-                </form>
-            </div>
+    <div class="modal">
+        <div class="modal__title">
+            <h3>Edit Column</h3>
         </div>
+        <form @submit.prevent="updateColumn">
+            <div>
+                <label for="name">Name</label>
+                <input id="name" type="text" v-model="column.name" placeholder="Column Name">
+            </div>
+            <div class="grid grid--justify-between modal__buttons">
+                <button class="btn btn--secondary" @click="$emit('close')">Cancel</button>
+                <button class="btn btn--primary" type="submit">Update Column</button>
+            </div>
+        </form>
     </div>
 </template>
 
@@ -31,7 +31,7 @@ export default {
     },
     methods: {
         async updateColumn() {
-            // await this.axios.post(`/api/column/update/${this.column_id}`, this.column);
+            await this.axios.post(`/api/column/update/${this.column_id}`, this.column);
             this.bus.$emit('columnUpdated', this.column);
             this.$emit('close');
         }

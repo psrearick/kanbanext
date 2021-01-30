@@ -1,44 +1,65 @@
 <template>
-    <div class="grid grid--full">
-        <main class="grid__cell">
+<!--    <div class="grid grid&#45;&#45;full">-->
+        <div class="container">
+        <!--        <aside class="grid__cell grid__cell&#45;&#45;25">-->
+<!--        <nav class="grid__cell grid__cell&#45;&#45;25" role="navigation">-->
+            <nav role="navigation">
+            <div id="menuToggle">
+                <input type="checkbox" />
+                <span></span>
+                <span></span>
+                <span></span>
+                <ul id="menu">
+                    <a @click="addColumn"><li>Add Column</li></a>
+                    <a @click="exportDatabase"><li>Export Database</li></a>
+                    <a @click="deleteBoard"><li>Delete Board</li></a>
+                </ul>
+            </div>
+        </nav>
+        <!--        </aside>-->
+<!--        <main class="grid__cell">-->
+        <main>
+            <div class="title">
+                <h2>Kanban Board</h2>
+            </div>
             <div class="columns__wrapper grid grid--gutters grid--full">
                 <div v-for="(column, columnIndex) in columns" :key="column.id" class="column grid__cell grid__cell--25">
-                    <div>
+                    <div class="column__name">
                         <strong>{{ column.name }}</strong>
-                        <div>
-                            <a v-if="columnIndex > 0" @click="moveColumn(column, 'left')">Left</a>
-                            <a v-if="columnIndex < columns.length - 1" @click="moveColumn(column, 'right')">Right</a>
+                    </div>
+
+                    <div class="column__container">
+                        <div class="column__navigation grid grid--overflow grid--justify-between">
+                            <div>
+                                <div class="arrow arrow--left arrow--75" v-if="columnIndex > 0" @click="moveColumn(column, 'left')"></div>
+                            </div>
+                            <div>
+                                <div class="arrow arrow-right arrow--75" v-if="columnIndex < columns.length - 1" @click="moveColumn(column, 'right')"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <a @click="editColumn(column.id)">Edit</a>
-                        <a @click="deleteColumn(column.id)">Delete</a>
-                    </div>
-                    <div class="grid grid--column column__cards" v-if="cardsInColumn(column.id).length">
-                        <Card v-for="(card, index) in cardsInColumn(column.id)"
-                              :key="card.id"
-                              :cardData="card"
-                              :index="index"
-                              :cardCount="cardsInColumn(column.id).length"
-                              :column="columnIndex"
-                              :columnCount="columns.length"
-                              v-on:delete="removeCard(card.id)"
-                              v-on:move="move(card, $event)">
-                        </Card>
-                    </div>
-                    <div>
-                        <a @click="addCard(column.id)">Add Card</a>
+                        <div class="grid grid--justify-between column__buttons">
+                            <button class="btn btn--sm" @click="editColumn(column.id)">Edit</button>
+                            <button class="btn btn--sm btn--secondary" @click="deleteColumn(column.id)">Delete</button>
+                        </div>
+                        <div class="grid grid--column column__cards" v-if="cardsInColumn(column.id).length">
+                            <Card v-for="(card, index) in cardsInColumn(column.id)"
+                                  :key="card.id"
+                                  :cardData="card"
+                                  :index="index"
+                                  :cardCount="cardsInColumn(column.id).length"
+                                  :column="columnIndex"
+                                  :columnCount="columns.length"
+                                  v-on:delete="removeCard(card.id)"
+                                  v-on:move="move(card, $event)">
+                            </Card>
+                        </div>
+<!--                        <div class="column__add-card">-->
+                            <button class="column__add-card" @click="addCard(column.id)">Add Card</button>
+<!--                        </div>-->
                     </div>
                 </div>
             </div>
         </main>
-        <aside class="grid__cell grid__cell--25">
-            <a @click="addColumn">Add Column</a>
-            <br>
-            <a @click="exportDatabase">Export Database</a>
-            <br>
-            <a @click="deleteBoard">Delete Board</a>
-        </aside>
     </div>
 </template>
 
@@ -62,11 +83,13 @@ export default {
         this.bus.$on('columnAdded', this.fetchColumns);
         this.bus.$on('cardAdded', this.fetchCards);
         this.bus.$on('columnUpdated', this.columnUpdated);
+        this.bus.$on('cardUpdated', this.updateCard);
     },
     beforeDestroy() {
         this.bus.$off('columnAdded');
         this.bus.$off('cardAdded');
         this.bus.$off('columnUpdated');
+        this.bus.$off('cardUpdated');
     },
     methods: {
         async fetchColumns() {
@@ -212,6 +235,10 @@ export default {
             link.setAttribute('download', 'db-dump.sql');
             document.body.appendChild(link);
             link.click();
+        },
+        updateCard(card) {
+            let i = this.cards.map(item => item.id).indexOf(card.id);
+            this.cards.splice(i, 1, card);
         },
         async deleteBoard() {
             let promises = this.columns.map(column => {

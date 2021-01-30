@@ -1,12 +1,14 @@
 <template>
-    <div>
-        <div>
+    <div class="modal">
+        <div class="modal__title">
             <h3>{{ card.title }}</h3>
-            <p>{{ card.description }}</p>
         </div>
         <div>
-            <a @click="editCard">Edit</a>
-            <a @click="$emit('close')">Close</a>
+            <p>{{ card.description }}</p>
+        </div>
+        <div class="grid grid--justify-between modal__buttons">
+            <button class="btn" @click="editCard">Edit Card</button>
+            <button class="btn btn--primary" @click="$emit('close')">Close</button>
         </div>
     </div>
 </template>
