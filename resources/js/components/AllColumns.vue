@@ -35,7 +35,7 @@
         <aside class="grid__cell grid__cell--25">
             <a @click="addColumn">Add Column</a>
             <br>
-            <h3>EXPORT</h3>
+            <a @click="exportDatabase">Export Database</a>
             <br>
             <h3>DELETE BOARD</h3>
         </aside>
@@ -200,6 +200,17 @@ export default {
         columnUpdated(column) {
             let columnIndex = this.columns.map(column => column.id).indexOf(column.id);
             this.columns.splice(columnIndex, 1, column);
+        },
+        async exportDatabase() {
+            let response = await this.axios.get('/api/download', {
+                responseType: 'blob'
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'db-dump.sql');
+            document.body.appendChild(link);
+            link.click();
         }
     }
 }

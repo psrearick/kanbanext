@@ -6,6 +6,9 @@ use App\Models\Column;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Spatie\DbDumper\Databases\MySql;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Class ColumnController
@@ -88,5 +91,20 @@ class ColumnController extends Controller
         $column->active = false;
         $column->save();
         return response()->json('Column deleted');
+    }
+
+    public function downloadDatabase(): BinaryFileResponse
+    {
+        $database = Config::get('database.connections.mysql');
+        MySql::create()
+            ->setDbName($database['database'])
+            ->setUserName($database['username'])
+            ->setPassword($database['password'])
+            ->dumpToFile('dump.sql');
+        $headers = [
+            'Content-Type' => 'application/sql',
+        ];
+        return response()->download('dump.sql', 'db-dump.sql', $headers);
+
     }
 }

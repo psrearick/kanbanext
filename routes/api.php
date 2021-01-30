@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('user', function (Request $request) {
 });
 
 Route::get('columns', [ColumnController::class, 'index']);
+Route::get('download', [ColumnController::class, 'downloadDatabase']);
 Route::group(['prefix' => 'column'], function () {
     Route::post('add', [ColumnController::class, 'add']);
     Route::get('edit/{id}', [ColumnController::class, 'edit']);
