@@ -17,6 +17,7 @@ class CreateColumnsTable extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('active')->default(1);
+            $table->decimal('rank');
             $table->timestamps();
         });
     }

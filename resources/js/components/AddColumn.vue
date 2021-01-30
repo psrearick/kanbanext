@@ -8,6 +8,7 @@
                     <input type="text" id="name" v-model="column.name">
                 </div>
                 <button type="submit">Add Column</button>
+                <router-link :to="{name: 'home'}" tag="button">Cancel</router-link>
             </form>
         </div>
     </div>

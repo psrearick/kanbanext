@@ -33,8 +33,11 @@ class ColumnController extends Controller
      */
     public function add(Request $request): JsonResponse
     {
+        $last = Column::where('active', true)->orderBy('rank', 'desc')->first();
+        $rank = $last ? $last->rank + 100 : 100;
         $column = new Column([
-            'name' => $request->input('name')
+            'name' => $request->input('name'),
+            'rank' => $rank
         ]);
         $column->save();
 

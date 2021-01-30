@@ -26,6 +26,7 @@ class CreateCardsTable extends Migration
                 ->references('id')
                 ->on('users');
             $table->boolean('active')->default(1);
+            $table->decimal('rank');
             $table->timestamps();
         });
     }

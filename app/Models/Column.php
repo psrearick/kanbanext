@@ -11,13 +11,14 @@ class Column extends Model
     /**
      * @var string[]
      */
-    protected $fillable = ['name', 'active'];
+    protected $fillable = ['name', 'active', 'rank'];
 
     /**
      * @var string[]
      */
     protected $casts = [
-        'active' => 'boolean'
+        'active' => 'boolean',
+        'rank' => 'float'
     ];
 
     /**

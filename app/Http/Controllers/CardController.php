@@ -35,11 +35,15 @@ class CardController extends Controller
      */
     public function add(Request $request): JsonResponse
     {
+        $columnId = $request->input('column_id');
+        $last = Card::where(['column_id' => $columnId, 'active' => true])->orderBy('rank', 'desc')->first();
+        $rank = $last ? $last->rank + 100 : 100;
         $card = new Card([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'column_id' => $request->input('column_id'),
-            'user_id' => 1 // TODO: CHANGE THIS TO LOGGED IN USER
+            'column_id' => $columnId,
+            'user_id' => 1, // TODO: CHANGE THIS TO LOGGED IN USER
+            'rank' => $rank
         ]);
         $card->save();
 

@@ -12,6 +12,7 @@
                     <textarea name="description" id="description" v-model="card.description"></textarea>
                 </div>
                 <button type="submit">Add Card</button>
+                <router-link :to="{name: 'home'}" tag="button">Cancel</router-link>
             </form>
         </div>
     </div>
