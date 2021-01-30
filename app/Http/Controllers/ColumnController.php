@@ -77,6 +77,11 @@ class ColumnController extends Controller
     public function delete(int $id): JsonResponse
     {
         $column = Column::find($id);
+        $cards = $column->cards;
+        foreach ($cards as $card) {
+            $card->active = false;
+            $card->save();
+        }
         $column->active = false;
         $column->save();
         return response()->json('Column deleted');
