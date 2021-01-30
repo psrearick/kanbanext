@@ -20,8 +20,9 @@
         "vue": "^2.5.17",
         "vue-loader": "^15.9.6",
         "vue-template-compiler": "^2.6.10",
-        "vue-axios": "^3.2.3",
-        "vue-router": "^3.5.1"
+        "vue-axios": "^3.2.3"
     },
-    "dependencies": {}
+    "dependencies": {
+        "vue-js-modal": "^2.0.0-rc.6"
+    }
 }

@@ -1,22 +1,14 @@
 require('./bootstrap');
 import Vue from "vue";
-import VueRouter from 'vue-router';
-
-Vue.use(VueRouter);
-
 import App from "./components/App.vue";
 import VueAxios from 'vue-axios';
-import {routes} from './routes';
+import VModal from 'vue-js-modal'
 
+Vue.use(VModal);
 Vue.prototype.axios = window.axios;
-
-const router = new VueRouter({
-    mode: 'history',
-    routes: routes
-});
+Vue.prototype.bus= new Vue();
 
 const app = new Vue({
     el: '#app',
-    router: router,
     render: h => h(App)
 });

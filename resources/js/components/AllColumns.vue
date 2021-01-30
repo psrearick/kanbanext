@@ -11,14 +11,13 @@
                         </div>
                     </div>
                     <div>
-                        <router-link :to="{name: 'edit-column', params: { id: column.id }}">Edit
-                        </router-link>
-                        <button @click="deleteColumn(column.id)">Delete</button>
+                        <a @click="editColumn(column.id)">Edit</a>
+                        <a @click="deleteColumn(column.id)">Delete</a>
                     </div>
                     <div class="grid grid--column column__cards" v-if="cardsInColumn(column.id).length">
                         <Card v-for="(card, index) in cardsInColumn(column.id)"
                               :key="card.id"
-                              :card="card"
+                              :cardData="card"
                               :index="index"
                               :cardCount="cardsInColumn(column.id).length"
                               :column="columnIndex"
@@ -28,13 +27,13 @@
                         </Card>
                     </div>
                     <div>
-                        <router-link :to="'/card/add/' + column.id">Add Card</router-link>
+                        <a @click="addCard(column.id)">Add Card</a>
                     </div>
                 </div>
             </div>
         </main>
         <aside class="grid__cell grid__cell--25">
-            <router-link to="/column/add">Add Column</router-link>
+            <a @click="addColumn">Add Column</a>
             <br>
             <h3>EXPORT</h3>
             <br>
@@ -46,6 +45,8 @@
 <script>
 import Card from "./Card";
 import AddColumn from "./AddColumn";
+import AddCard from "./AddCard";
+import EditColumn from "./EditColumn";
 export default {
     name: "AllColumns",
     components: {Card},
@@ -56,14 +57,32 @@ export default {
         }
     },
     async created() {
-        this.columns = (await this.axios.get('/api/columns')).data
-            .sort((a, b) => a.rank - b.rank);
-        let cardsResponse = (await this.axios.get('/api/cards')).data;
-        cardsResponse.forEach(card => {
-            this.cards.push(card);
-        });
+        await this.fetchColumns();
+        await this.fetchCards();
+        this.bus.$on('columnAdded', this.fetchColumns);
+        this.bus.$on('cardAdded', this.fetchCards);
+        this.bus.$on('columnUpdated', this.columnUpdated);
+    },
+    beforeDestroy() {
+        this.bus.$off('columnAdded');
+        this.bus.$off('cardAdded');
+        this.bus.$off('columnUpdated');
     },
     methods: {
+        async fetchColumns() {
+            this.columns = (await this.axios.get('/api/columns')).data
+                .sort((a, b) => a.rank - b.rank);
+            return true;
+        },
+        async fetchCards() {
+            let cards = [];
+            let cardsResponse = (await this.axios.get('/api/cards')).data;
+            cardsResponse.forEach(card => {
+                cards.push(card);
+            });
+            this.cards = cards;
+            return true;
+        },
         async deleteColumn(id) {
             await this.axios.delete(`/api/column/delete/${id}`);
             let i = this.columns.map(item => item.id).indexOf(id);
@@ -147,6 +166,41 @@ export default {
             card.rank = highestRank + 100;
             return card;
         },
+        addColumn() {
+            this.$modal.show(
+                AddColumn,
+                {},
+                {
+                    height: 'auto'
+                },
+            );
+        },
+        addCard(column) {
+            this.$modal.show(
+                AddCard,
+                {
+                    'column_id': column
+                },
+                {
+                    height: 'auto'
+                },
+            )
+        },
+        editColumn(column_id) {
+            this.$modal.show(
+                EditColumn,
+                {
+                    'column_id': column_id
+                },
+                {
+                    height: 'auto'
+                }
+            );
+        },
+        columnUpdated(column) {
+            let columnIndex = this.columns.map(column => column.id).indexOf(column.id);
+            this.columns.splice(columnIndex, 1, column);
+        }
     }
 }
 </script>

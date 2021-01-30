@@ -8,7 +8,7 @@
                     <input type="text" id="name" v-model="column.name">
                 </div>
                 <button type="submit">Add Column</button>
-                <router-link :to="{name: 'home'}" tag="button">Cancel</router-link>
+                <a @click="$emit('close')">Cancel</a>
             </form>
         </div>
     </div>
@@ -23,14 +23,10 @@ export default {
         }
     },
     methods: {
-        addColumn() {
-            this.axios
-                .post('/api/column/add', this.column)
-                .then(response => {
-                    this.$router.push({name: 'home'})
-                })
-                .catch(error => console.log(error))
-                .finally(() => this.loading = false);
+        async addColumn() {
+            await this.axios.post('/api/column/add', this.column);
+            this.bus.$emit('columnAdded');
+            this.$emit('close');
         }
     }
 }

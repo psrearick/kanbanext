@@ -12,7 +12,7 @@
                     <textarea name="description" id="description" v-model="card.description"></textarea>
                 </div>
                 <button type="submit">Add Card</button>
-                <router-link :to="{name: 'home'}" tag="button">Cancel</router-link>
+                <a @click="$emit('close')">Cancel</a>
             </form>
         </div>
     </div>
@@ -26,16 +26,13 @@ export default {
             card: {}
         }
     },
+    props: ['column_id'],
     methods: {
-        addCard() {
-            this.card.column_id = this.$route.params.id;
-            this.axios
-            .post('api/card/add', this.card)
-            .then(response => {
-                this.$router.push({name: 'home'})
-            })
-            .catch(error => console.log(error))
-            .finally(() => this.loading = false);
+        async addCard() {
+            this.card.column_id = this.column_id;
+            await this.axios.post('api/card/add', this.card);
+            this.bus.$emit('cardAdded');
+            this.$emit('close');
         }
     }
 }

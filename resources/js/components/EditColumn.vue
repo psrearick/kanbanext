@@ -9,7 +9,7 @@
                         <input id="name" type="text" v-model="column.name">
                     </div>
                     <button type="submit">Update Column</button>
-                    <router-link :to="{name: 'home'}" tag="button">Cancel</router-link>
+                    <a @click="$emit('close')">Cancel</a>
                 </form>
             </div>
         </div>
@@ -24,20 +24,16 @@ export default {
             column: {}
         }
     },
-    created() {
-        this.axios
-            .get(`/api/column/edit/${this.$route.params.id}`)
-            .then((response) => {
-                this.column = response.data;
-            });
+    props: ['column_id'],
+    async created() {
+        let response = await this.axios.get(`/api/column/edit/${this.column_id}`);
+        this.column = response.data;
     },
     methods: {
-        updateColumn() {
-            this.axios
-                .post(`/api/column/update/${this.$route.params.id}`, this.column)
-                .then((response) => {
-                    this.$router.push({name: 'home'});
-                })
+        async updateColumn() {
+            // await this.axios.post(`/api/column/update/${this.column_id}`, this.column);
+            this.bus.$emit('columnUpdated', this.column);
+            this.$emit('close');
         }
     }
 }

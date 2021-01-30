@@ -12,7 +12,7 @@
                     <textarea name="description" id="description" v-model="card.description"></textarea>
                 </div>
                 <button type="submit">Edit Card</button>
-                <router-link :to="{name: 'home'}" tag="button">Cancel</router-link>
+                <a @click="$emit('close')">Cancel</a>
             </form>
         </div>
     </div>
@@ -26,14 +26,16 @@ export default {
             card: {}
         }
     },
+    props: ['card_id'],
     async created() {
-        let response = await this.axios.get(`/api/card/edit/${this.$route.params.id}`);
+        let response = await this.axios.get(`/api/card/edit/${this.card_id}`);
         this.card = response.data;
     },
     methods: {
         async updateCard() {
-            await this.axios.post(`/api/card/update/${this.$route.params.id}`, this.card);
-            await this.$router.push({name: 'home'});
+            await this.axios.post(`/api/card/update/${this.card_id}`, this.card);
+            this.bus.$emit('cardUpdated', this.card);
+            this.$emit('close');
         }
 }
 }
