@@ -20,10 +20,11 @@ class CardController extends Controller
      *
      * @return array
      */
+//    public function index(): array
     public function index(): array
     {
-        $cards = Card::all()->toArray();
-        return array_reverse($cards);
+        $cards = Card::where(['active' => true])->get()->toArray();
+        return $cards > 1 ? $cards : [$cards];
     }
 
     /**
@@ -80,7 +81,8 @@ class CardController extends Controller
     public function delete(int $id): JsonResponse
     {
         $card = Card::find($id);
-        $card->delete();
+        $card->active = false;
+        $card->save();
         return response()->json('Card deleted');
     }
 

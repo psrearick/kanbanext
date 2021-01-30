@@ -7,5 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Column extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'active'];
+
+    protected $casts = [
+        'active' => 'boolean'
+    ];
 }

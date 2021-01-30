@@ -22,7 +22,7 @@ class ColumnController extends Controller
      */
     public function index(): array
     {
-        return Column::all()->toArray();
+        return Column::where(['active' => true])->get()->toArray();
     }
 
     /**
@@ -77,7 +77,8 @@ class ColumnController extends Controller
     public function delete(int $id): JsonResponse
     {
         $column = Column::find($id);
-        $column->delete();
+        $column->active = false;
+        $column->save();
         return response()->json('Column deleted');
     }
 }

@@ -1,16 +1,14 @@
 <template>
     <div>
         <h3>Add Column</h3>
-        <div class="row">
-            <div>
-                <form @submit.prevent="addColumn">
-                    <div>
-                        <label>Name</label>
-                        <input type="text" v-model="column.name">
-                    </div>
-                    <button type="submit">Add Column</button>
-                </form>
-            </div>
+        <div>
+            <form @submit.prevent="addColumn">
+                <div>
+                    <label for="name">Name</label>
+                    <input type="text" id="name" v-model="column.name">
+                </div>
+                <button type="submit">Add Column</button>
+            </form>
         </div>
     </div>
 </template>
